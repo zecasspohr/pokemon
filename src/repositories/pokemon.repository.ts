@@ -1,43 +1,41 @@
-import PokemonSchema from '../schema/pokemon.schema.js'
+import PokemonSchema, { Pokemon } from '../schema/pokemon.schema.js'
 import { connect } from './db.js'
 
-async function getPokemonModel () {
+async function getPokemonModel() {
   const mongoose = await connect()
-  return mongoose.model('pokemon', PokemonSchema)
+  return mongoose.model<Pokemon>('pokemon', PokemonSchema)
 }
 
-async function createPokemon (pokemon) {
+async function createPokemon(pokemon: Pokemon) {
   const Pokemon = await getPokemonModel()
-  pokemon = new Pokemon(pokemon)
-  await pokemon.save()
+  await new Pokemon(pokemon).save()
 }
-async function createManyPokemons (pokemons) {
+async function createManyPokemons(pokemons: Pokemon[]) {
   const Pokemon = await getPokemonModel()
   await Pokemon.insertMany(pokemons)
 }
 
-async function getPokemons (filter = {}) {
+async function getPokemons(filter = {}): Promise<Pokemon[]> {
   const Pokemon = await getPokemonModel()
-  const query = Pokemon.find(filter)
-  return await query.exec()
+  return (await Pokemon.find(filter).exec()) as Pokemon[]
 }
 
-async function getPokemon (_id) {
+async function getPokemon(_id: String) {
   const Pokemon = await getPokemonModel()
   const query = Pokemon.findOne({ _id: _id })
   return await query.exec()
 }
 
-async function updatePokemon (pokemon) {
+async function updatePokemon(pokemon: Pokemon) {
   const Pokemon = await getPokemonModel()
   await Pokemon.findOneAndUpdate({ _id: pokemon._id }, pokemon)
 }
-async function deletePokemon (_id) {
+async function deletePokemon(_id: String) {
   const Pokemon = await getPokemonModel()
   await Pokemon.deleteOne({ _id })
 }
 
-async function isEmpty () {
+async function isEmpty() {
   const Pokemon = await getPokemonModel()
   return !(await Pokemon.findOne({}).exec())
 }

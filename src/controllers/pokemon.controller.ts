@@ -1,10 +1,11 @@
+import { Request, Response } from 'express'
 import PokemonService from '../services/pokemon.service.js'
 import { validationResult } from 'express-validator'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
 import { promises as fs } from 'fs'
 
-async function validaRequest (req, res, next) {
+async function validaRequest(req: Request, res: Response, next: any) {
   const erros = validationResult(req)
   if (!erros.isEmpty()) {
     return res.status(400).json({ erro: erros.array() })
@@ -12,23 +13,25 @@ async function validaRequest (req, res, next) {
   next()
 }
 
-async function createPokemon (req, res, next) {
+async function createPokemon(req: Request, res: Response, next: any) {
   try {
     const pokemon = req.body
-
+    if (pokemon.abilities && typeof pokemon.abilities === 'string') {
+      pokemon.abilities = JSON.parse(pokemon.abilities.replace(/'/g, '"'))
+    }
     res.send(await PokemonService.createPokemon(pokemon))
   } catch (err) {
     next(err)
   }
 }
-async function getPokemons (req, res, next) {
+async function getPokemons(req: Request, res: Response, next: any) {
   try {
     res.send(await PokemonService.getPokemons())
   } catch (err) {
     next(err)
   }
 }
-async function getPokemon (req, res, next) {
+async function getPokemon(req: Request, res: Response, next: any) {
   try {
     const id = req.params.id
     res.send(await PokemonService.getPokemon(id))
@@ -36,18 +39,18 @@ async function getPokemon (req, res, next) {
     next(err)
   }
 }
-async function updatePokemon (req, res, next) {
+async function updatePokemon(req: Request, res: Response, next: any) {
   try {
     let novoPokemon = req.body
     let pokemon = await PokemonService.getPokemon(novoPokemon._id)
     novoPokemon = { ...pokemon, ...novoPokemon }
-    pokemon = await PokemonService.updatePokemon(novoPokemon)
-    res.send(pokemon)
+    await PokemonService.updatePokemon(novoPokemon)
+    res.end()
   } catch (err) {
     next(err)
   }
 }
-async function deletePokemon (req, res, next) {
+async function deletePokemon(req: Request, res: Response, next: any) {
   try {
     const id = req.params.id
     await PokemonService.deletePokemon(id)
@@ -57,7 +60,7 @@ async function deletePokemon (req, res, next) {
   }
 }
 
-async function validaPokemon (req, res, next) {
+async function validaPokemon(req: Request, res: Response, next: any) {
   const pokemon = req.body
   const exists = await PokemonService.getPokemon(pokemon._id)
   if (!exists) {
@@ -68,7 +71,7 @@ async function validaPokemon (req, res, next) {
 
 const allowedExtensions = ['png', 'jpg']
 
-async function uploadImage (req, res, next) {
+async function uploadImage(req: Request, res: Response, next: any) {
   try {
     const pokemon = req.body
     const ext = path.extname(req.file.originalname)

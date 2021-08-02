@@ -1,39 +1,37 @@
 import PokemonRepository from '../repositories/pokemon.repository.js'
+import { Pokemon } from '../schema/pokemon.schema.js'
 import csv from 'csvtojson'
 
-async function createPokemon (pokemon) {
-  if (pokemon.abilities && typeof pokemon.abilities === 'string') {
-    pokemon.abilities = JSON.parse(pokemon.abilities.replace(/'/g, '"'))
-  }
+async function createPokemon(pokemon: Pokemon) {
   return await PokemonRepository.createPokemon(pokemon)
 }
-async function getPokemons () {
+async function getPokemons() {
   return await PokemonRepository.getPokemons()
 }
-async function getPokemon (id) {
+async function getPokemon(id: String) {
   return await PokemonRepository.getPokemon(id)
 }
-async function deletePokemon (id) {
+async function deletePokemon(id: String) {
   return await PokemonRepository.deletePokemon(id)
 }
-async function updatePokemon (pokemon) {
+async function updatePokemon(pokemon: Pokemon) {
   return await PokemonRepository.updatePokemon(pokemon)
 }
 
-async function fillPokemonsOnEmptyDatabase () {
+async function fillPokemonsOnEmptyDatabase() {
   if (!await PokemonRepository.isEmpty()) return
 
   await createFromFile()
 }
 
-async function createFromFile () {
-  const pokemons = await csv({
+async function createFromFile() {
+  const pokemons = (await csv({
     colParser: {
       abilities: (item) => {
         return JSON.parse(item.replace(/'/g, '"'))
       }
     }
-  }).fromFile('arquivos/csv/pokemon.csv')
+  }).fromFile('arquivos/csv/pokemon.csv')) as Array<Pokemon>
   await PokemonRepository.createManyPokemons(pokemons)
 }
 
