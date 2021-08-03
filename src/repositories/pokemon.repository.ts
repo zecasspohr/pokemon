@@ -17,7 +17,7 @@ async function createManyPokemons(pokemons: Pokemon[]) {
 
 async function getPokemons(filter = {}): Promise<Pokemon[]> {
   const Pokemon = await getPokemonModel()
-  return (await Pokemon.find(filter).exec()) as Pokemon[]
+  return await Pokemon.find(filter).lean().exec()
 }
 
 async function getPokemon(_id: String) {
