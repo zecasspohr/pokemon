@@ -1,17 +1,15 @@
+import { getModelForClass, Prop, Ref } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 import { Pokemon } from './pokemon.schema.js'
 
-interface Sorteados {
-  pokemons: Pokemon[]
+class SorteadosClass {
+  @Prop({ default: [], ref: 'Pokemon', type: () => Pokemon })
+  public pokemons: Ref<Pokemon>[] = []
 }
 
-const SorteadosSchema = new mongoose.Schema(
-  {
-    pokemons: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'pokemon'
-    }]
-  }, { collection: 'sorteados' }
-)
-export { Sorteados }
-export default SorteadosSchema
+const SorteadosModel = getModelForClass(SorteadosClass, {
+  existingMongoose: mongoose,
+  schemaOptions: { collection: 'sorteados' }
+})
+export { SorteadosClass as Sorteados }
+export default SorteadosModel

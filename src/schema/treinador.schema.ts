@@ -1,23 +1,20 @@
+import { getModelForClass, Prop, Ref } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 import { Pokemon } from './pokemon.schema.js'
 
-interface Treinador {
-  _id?: string,
-  name: string,
-  city: string,
-  pokemons: Pokemon[] | string
+class TreinadorClass {
+  @Prop()
+  public name: string;
+  @Prop()
+  public city: string;
+  @Prop({ default: [], ref: 'Pokemon', type: () => Pokemon })
+  public pokemons: Ref<Pokemon>[] = [];
 }
 
-const TreinadorSchema = new mongoose.Schema(
-  {
-    name: String,
-    city: String,
-    pokemons: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'pokemon'
-    }]
-  }, { collection: 'treinador' }
-)
+const TreinadorModel = getModelForClass(TreinadorClass, {
+  existingMongoose: mongoose,
+  schemaOptions: { collection: 'treinador' }
+})
 
-export { Treinador }
-export default TreinadorSchema
+export { TreinadorClass as Treinador }
+export default TreinadorModel

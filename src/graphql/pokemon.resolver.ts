@@ -4,6 +4,7 @@ import sorteadosRepository from "../repositories/sorteados.repository.js";
 import { Pokemon } from "../schema/pokemon.schema.js";
 import { Args, Mutation, Query, Resolver } from "type-graphql";
 import { PokemonRecipe, RandomPokemonArgs } from "./pokemon.recipe.js";
+import { DocumentType } from "@typegoose/typegoose";
 
 @Resolver()
 class PokemonResolver {
@@ -28,20 +29,20 @@ function removeUndefined(obj: any) {
   return obj
 }
 
-async function cadastraSorteados(pokemons: Pokemon[]) {
+async function cadastraSorteados(pokemons: DocumentType<Pokemon>[]) {
   const pokemonsId = pokemons.map((it) => { return it._id })
-  await sorteadosRepository.createSorteados(pokemonsId)
+  await sorteadosRepository.createSorteados({ pokemons: pokemonsId })
 }
 
-function pickTenRandom(pokemons: Pokemon[]): Pokemon[] {
+function pickTenRandom(pokemons: DocumentType<Pokemon>[]): DocumentType<Pokemon>[] {
   if (pokemons.length <= 10) {
     return pokemons
   }
 
-  const sorteados: Pokemon[] = []
+  const sorteados: DocumentType<Pokemon>[] = []
   for (let i = 0; i < 10; i++) {
     const indice = generateRandomInteger(pokemons.length - 1)
-    const pokemon: Pokemon = pokemons.splice(indice, 1)[0]
+    const pokemon: DocumentType<Pokemon> = pokemons.splice(indice, 1)[0]
     sorteados.push(pokemon)
   }
   return sorteados

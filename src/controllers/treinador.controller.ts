@@ -28,7 +28,8 @@ async function getTreinadores(req: Request, res: Response, next: any) {
 async function getTreinador(req: Request, res: Response, next: any) {
   try {
     const id = req.params.id
-    res.send(await TreinadorService.getTreinador(id))
+    const treinador = await TreinadorService.getTreinador(id)
+    res.send(treinador)
   } catch (err) {
     next(err)
   }
@@ -56,14 +57,13 @@ async function addPokemon(req: Request, res: Response, next: any) {
   try {
     let data = req.body
     let treinador = await TreinadorService.getTreinador(data._id)
-    if (!treinador.pokemons || typeof treinador.pokemons == 'string') {
-      treinador.pokemons = []
-    }
+
     treinador.pokemons.push(data.pokemon)
     if (treinador.pokemons.length > 7) {
       throw new Error('É permitido apenas 7 pokemons por treinador!')
     }
-    await TreinadorService.updateTreinador(treinador)
+
+    await treinador.save()
     res.end()
   } catch (err) {
     next(err)

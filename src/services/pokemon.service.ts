@@ -1,6 +1,7 @@
 import PokemonRepository from '../repositories/pokemon.repository.js'
 import { Pokemon } from '../schema/pokemon.schema.js'
 import csv from 'csvtojson'
+import { DocumentType } from '@typegoose/typegoose'
 
 async function createPokemon(pokemon: Pokemon) {
   return await PokemonRepository.createPokemon(pokemon)
@@ -8,13 +9,13 @@ async function createPokemon(pokemon: Pokemon) {
 async function getPokemons() {
   return await PokemonRepository.getPokemons()
 }
-async function getPokemon(id: String) {
+async function getPokemon(id: string) {
   return await PokemonRepository.getPokemon(id)
 }
-async function deletePokemon(id: String) {
+async function deletePokemon(id: string) {
   return await PokemonRepository.deletePokemon(id)
 }
-async function updatePokemon(pokemon: Pokemon) {
+async function updatePokemon(pokemon: DocumentType<Pokemon>) {
   return await PokemonRepository.updatePokemon(pokemon)
 }
 

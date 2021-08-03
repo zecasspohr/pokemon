@@ -1,3 +1,4 @@
+import { DocumentType } from '@typegoose/typegoose'
 import TreinadorRepository from '../repositories/treinador.repository.js'
 import { Treinador } from '../schema/treinador.schema.js'
 
@@ -16,7 +17,7 @@ async function getTreinador(id: string) {
 async function deleteTreinador(id: string) {
   return await TreinadorRepository.deleteTreinador(id)
 }
-async function updateTreinador(treinador: Treinador) {
+async function updateTreinador(treinador: DocumentType<Treinador>) {
   return await TreinadorRepository.updateTreinador(treinador)
 }
 

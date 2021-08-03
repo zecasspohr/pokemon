@@ -1,95 +1,96 @@
+import { getModelForClass, prop } from '@typegoose/typegoose'
 import mongoose from 'mongoose'
 
-interface Pokemon {
-  _id?: String,
-  abilities: [String],
-  against_bug: Number,
-  against_dark: Number,
-  against_dragon: Number,
-  against_electric: Number,
-  against_fairy: Number,
-  against_fight: Number,
-  against_fire: Number,
-  against_flying: Number,
-  against_ghost: Number,
-  against_grass: Number,
-  against_ground: Number,
-  against_ice: Number,
-  against_normal: Number,
-  against_poison: Number,
-  against_psychic: Number,
-  against_rock: Number,
-  against_steel: Number,
-  against_water: Number,
-  attack: Number,
-  base_egg_steps: Number,
-  base_happiness: Number,
-  base_total: Number,
-  capture_rate: String,
-  classfication: String,
-  defense: Number,
-  experience_growth: Number,
-  height_m: Number,
-  hp: Number,
-  japanese_name: String,
-  name: String,
-  percentage_male: String,
-  pokedex_number: String,
-  sp_attack: Number,
-  sp_defense: Number,
-  speed: Number,
-  type1: String,
-  type2: String,
-  weight_kg: String,
-  generation: String,
-  is_legendary: Number
+class PokemonClass {
+  @prop({ type: () => [String] })
+  public abilities: string[];
+  @prop()
+  public against_bug: number;
+  @prop()
+  public against_dark: number;
+  @prop()
+  public against_dragon: number;
+  @prop()
+  public against_electric: number;
+  @prop()
+  public against_fairy: number;
+  @prop()
+  public against_fight: number;
+  @prop()
+  public against_fire: number;
+  @prop()
+  public against_flying: number;
+  @prop()
+  public against_ghost: number;
+  @prop()
+  public against_grass: number;
+  @prop()
+  public against_ground: number;
+  @prop()
+  public against_ice: number;
+  @prop()
+  public against_normal: number;
+  @prop()
+  public against_poison: number;
+  @prop()
+  public against_psychic: number;
+  @prop()
+  public against_rock: number;
+  @prop()
+  public against_steel: number;
+  @prop()
+  public against_water: number;
+  @prop()
+  public attack: number;
+  @prop()
+  public base_egg_steps: number;
+  @prop()
+  public base_happiness: number;
+  @prop()
+  public base_total: number;
+  @prop()
+  public capture_rate: string;
+  @prop()
+  public classfication: string;
+  @prop()
+  public defense: number;
+  @prop()
+  public experience_growth: number;
+  @prop()
+  public height_m: number;
+  @prop()
+  public hp: number;
+  @prop()
+  public japanese_name: string;
+  @prop()
+  public name: string;
+  @prop()
+  public percentage_male: string;
+  @prop()
+  public pokedex_number: string;
+  @prop()
+  public sp_attack: number;
+  @prop()
+  public sp_defense: number;
+  @prop()
+  public speed: number;
+  @prop()
+  public type1: string;
+  @prop()
+  public type2: string;
+  @prop()
+  public weight_kg: string;
+  @prop()
+  public generation: string;
+  @prop()
+  public is_legendary: number;
 }
 
-const PokemonSchema = new mongoose.Schema(
-  {
-    abilities: [String],
-    against_bug: Number,
-    against_dark: Number,
-    against_dragon: Number,
-    against_electric: Number,
-    against_fairy: Number,
-    against_fight: Number,
-    against_fire: Number,
-    against_flying: Number,
-    against_ghost: Number,
-    against_grass: Number,
-    against_ground: Number,
-    against_ice: Number,
-    against_normal: Number,
-    against_poison: Number,
-    against_psychic: Number,
-    against_rock: Number,
-    against_steel: Number,
-    against_water: Number,
-    attack: Number,
-    base_egg_steps: Number,
-    base_happiness: Number,
-    base_total: Number,
-    capture_rate: String,
-    classfication: String,
-    defense: Number,
-    experience_growth: Number,
-    height_m: Number,
-    hp: Number,
-    japanese_name: String,
-    name: String,
-    percentage_male: String,
-    pokedex_number: String,
-    sp_attack: Number,
-    sp_defense: Number,
-    speed: Number,
-    type1: String,
-    type2: String,
-    weight_kg: String,
-    generation: String,
-    is_legendary: Number
-  }, { collection: 'pokemon' }
-)
-
-export { Pokemon }
-export default PokemonSchema
+const PokemonModel = getModelForClass(PokemonClass, {
+  existingMongoose: mongoose,
+  schemaOptions: { collection: 'pokemon' }
+})
+export {
+  PokemonClass as Pokemon
+}
+export default PokemonModel

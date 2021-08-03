@@ -1,43 +1,41 @@
-import PokemonSchema, { Pokemon } from '../schema/pokemon.schema.js'
+import { DocumentType } from '@typegoose/typegoose'
+import PokemonModel, { Pokemon } from '../schema/pokemon.schema.js'
 import { connect } from './db.js'
 
-async function getPokemonModel() {
-  const mongoose = await connect()
-  return mongoose.model<Pokemon>('pokemon', PokemonSchema)
-}
+
 
 async function createPokemon(pokemon: Pokemon) {
-  const Pokemon = await getPokemonModel()
-  await new Pokemon(pokemon).save()
+  await connect()
+  await new PokemonModel(pokemon).save()
 }
 async function createManyPokemons(pokemons: Pokemon[]) {
-  const Pokemon = await getPokemonModel()
-  await Pokemon.insertMany(pokemons)
+  await connect()
+  await PokemonModel.insertMany(pokemons)
 }
 
-async function getPokemons(filter = {}): Promise<Pokemon[]> {
-  const Pokemon = await getPokemonModel()
-  return await Pokemon.find(filter).lean().exec()
+async function getPokemons(filter = {}) {
+  await connect()
+  return await PokemonModel.find(filter).exec()
 }
 
-async function getPokemon(_id: String) {
-  const Pokemon = await getPokemonModel()
-  const query = Pokemon.findOne({ _id: _id })
+async function getPokemon(_id: string) {
+  await connect()
+  const query = PokemonModel.findOne({ _id: _id }).lean()
   return await query.exec()
 }
 
-async function updatePokemon(pokemon: Pokemon) {
-  const Pokemon = await getPokemonModel()
-  await Pokemon.findOneAndUpdate({ _id: pokemon._id }, pokemon)
+async function updatePokemon(pokemon: DocumentType<Pokemon>) {
+  await connect()
+  await PokemonModel.findOneAndUpdate({ _id: pokemon._id }, pokemon)
 }
-async function deletePokemon(_id: String) {
-  const Pokemon = await getPokemonModel()
-  await Pokemon.deleteOne({ _id })
+async function deletePokemon(_id: string) {
+  await connect()
+  await PokemonModel.deleteOne({ _id })
 }
 
 async function isEmpty() {
-  const Pokemon = await getPokemonModel()
-  return !(await Pokemon.findOne({}).exec())
+  await connect()
+  return !(await PokemonModel.findOne({}).exec())
 }
 
 export default {
